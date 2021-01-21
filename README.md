@@ -1,0 +1,2 @@
+# ghgodoc
+godoc GitHub Pages
