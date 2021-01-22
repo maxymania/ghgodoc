@@ -142,6 +142,7 @@ func (bdr *Builder) renderFooter(pd *doc.Package) {
 	for _,imp := range pd.Imports {
 		fmt.Fprintf(&bdr.Target,"<li><code>import %q</code></li>",imp)
 	}
+	fmt.Fprintf(&bdr.Target,"</ul>\n")
 }
 func (bdr *Builder) Generate(fset *token.FileSet, pd *doc.Package) {
 	bdr.fset = fset
