@@ -140,7 +140,7 @@ func (bdr *Builder) renderFooter(pd *doc.Package) {
 	if len(pd.Imports)==0 { return }
 	fmt.Fprintf(&bdr.Target,"<h2>Dependencies</h2><ul>\n")
 	for _,imp := range pd.Imports {
-		fmt.Fprintf(&bdr.Target,"<li><code>import %q<code></li>",imp)
+		fmt.Fprintf(&bdr.Target,"<li><code>import %q</code></li>",imp)
 	}
 }
 func (bdr *Builder) Generate(fset *token.FileSet, pd *doc.Package) {

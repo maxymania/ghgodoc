@@ -11,6 +11,7 @@ import (
 	
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 var pspkg = flag.String("pkg","","golang package")
@@ -36,12 +37,27 @@ func document() {
 	err = os.MkdirAll(targp,0755)
 	if err!=nil { log.Fatal(err) }
 	
+	if txt,err := os.Create(filepath.Join(targp,"pkg.txt")); err==nil {
+		pkgtxt := apkg.Doc
+		i := strings.Index(pkgtxt,".")
+		if i>0 { pkgtxt = pkgtxt[:i+1] }
+		txt.Write([]byte(pkgtxt))
+		txt.Close()
+	}
+	if _,err := os.Stat(filepath.Join(targp,"list.html")); err!=nil && os.IsNotExist(err) {
+		if lst,err := os.Create(filepath.Join(targp,"list.html")); err==nil {
+			lst.Write([]byte(`<!-- No list yet -->`))
+			lst.Close()
+		}
+	}
+	
 	dcb := new(ghdc.Builder)
 	dcb.Target.WriteString("---\nlayout: godoc\n")
 	dcb.Target.WriteString("title: "+apkg.Name+"\n")
 	dcb.Target.WriteString("gopkg: "+apkg.ImportPath+"\n")
 	dcb.Target.WriteString("---\n")
 	dcb.Generate(fset,apkg)
+	dcb.Target.WriteString("\n{% include_relative list.html %}\n")
 	fobj,err := os.Create(filepath.Join(targp,"index.html"))
 	if err!=nil { log.Fatal(err) }
 	defer fobj.Close()
